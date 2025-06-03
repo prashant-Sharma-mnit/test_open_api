@@ -30,10 +30,8 @@
 - [MarketSnapshot](#marketsnapshot)  
 - [MarketFeed](#marketfeed)  
 - [MarketDepth](#marketdepth)
-- [WebSocket](#websocket)  
-
+  
 ---
-
 
 
 # OAuth Login (Web Based)
@@ -305,20 +303,20 @@ Authorization is **mandatory** via Bearer Token in the `Authorization` header.
 | `head.key`       | string  | ✅        | Your registered app key                       |
 | `Exchange`       | string  | ✅        | `N` = NSE, `B` = BSE, `M` = MCX               |
 | `ExchangeType`   | string  | ✅        | `C` = Cash, `D` = Derivatives, `U` = Currency |
-| `ScripCode`      | string  | ✅        | Unique code of the instrument                 |
-| `ScripData`      | string  | ❌        | Optional instrument identifier                |
+| `ScripCode`      | string  | ✅        | Unique code of the instrument (recommended)   |
+| `ScripData`      | string  | ❌        | Optional (if ScripCode unavailbale )          |
 | `Price`          | double  | ❌        | Order price. Set to `0` for market order      |
 | `StopLossPrice`  | double  | ❌        | Trigger price for SL orders                   |
 | `OrderType`      | string  | ✅        | `Buy` or `Sell`                               |
 | `Qty`            | integer | ✅        | Total quantity                                |
 | `DisQty`         | integer | ❌        | Disclosed quantity (≤ Qty)                    |
 | `IsIntraday`     | boolean | ❌        | `true` = intraday, `false` = delivery         |
-| `iOrderValidity` | integer | ❌        | 0 = Day, 1 = GTD, 3 = IOC, etc.               |
+| `iOrderValidity` | integer | ❌        | 0 = Day, 5 = GTD, 3 = IOC, etc.               |
 | `AHPlaced`       | string  | ❌        | After Market Order flag: `Y` or `N`           |
-| `RemoteOrderID`  | string  | ✅        | user defined Custom ID for user tracking                   |
-| `ValidTillDate`  | string  | ❌        | For GTD/GTC orders in `/Date(Unix)` format    |
+| `RemoteOrderID`  | string  | ✅        | user defined Custom ID for user tracking      |
+| `ValidTillDate`  | string  | ❌        | For GTD/VTD orders in `/Date(Unix)` format    |
 | `AlgoID`         | integer | ❌        | Strategy-specific algorithm ID                |
-| `DeviceID`       | string  | ✅        | Unique device/app instance ID                 |
+| `DeviceID`       | string  | ❌       | Unique device/app instance ID                 |
 
 ---
 
@@ -327,12 +325,8 @@ Authorization is **mandatory** via Bearer Token in the `Authorization` header.
 | Code | Meaning                   |
 | ---- | ------------------------- |
 | 0    | Day                       |
-| 1    | GTD (Good Till Date)      |
-| 2    | GTC (Good Till Cancel)    |
 | 3    | IOC (Immediate or Cancel) |
-| 4    | EOS                       |
 | 5    | VTD                       |
-| 6    | FOK (Fill or Kill)        |
 ---
 
 ### Supported Order Types
@@ -471,6 +465,7 @@ In certain scenarios, specifically with Stop-Loss (SL) orders, we have observed 
 * Validate request data to avoid rejections
 * Assign unique `DeviceID` for each strategy runner
 * Keep `AlgoID` dynamic per strategy or signal
+* `AlgoID` is mandatory if order frequency is more than 10 orders per second 
 
 ---
 
