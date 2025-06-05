@@ -919,173 +919,237 @@ POST https://Openapi.5paisa.com/VendorsAPI/Service1.svc/MultiOrderMargin
 
 ---
 
+
+
+  
+
+
 # OrderStatus
 
-## 🧠 Purpose of OrderStatusV2 API
+## 🔹 API Name
+`v2/OrderStatus`
 
-The `OrderStatusV2` API is used to **fetch the real-time status of one or multiple stock trading orders**. It provides detailed insights into order lifecycle events, including open, executed, pending, and canceled orders.
+---
+
+## 🎯 Purpose
+
+The `OrderStatusV2` API allows you to **fetch real-time status of one or more orders** placed via the 5paisa trading system. Ideal for algorithmic trading, dashboards, and bot monitoring workflows.
 
 ---
 
 ## 📌 Endpoint
 
 ```
-POST https://Openapi.5paisa.com/VendorsAPI/Service1.svc/V2/OrderStatus
+https://Openapi.5paisa.com/VendorsAPI/Service1.svc/V2/OrderStatus
 ```
+
 
 ---
 
-## 📥 Request Structure (JSON)
+## 📥 Request Structure
+
+### ➕ Method
+`POST`
+
+### ➕ Headers
+
+| Key             | Value                        |
+|----------------|------------------------------|
+| Content-Type   | application/json             |
+| Authorization  | Bearer `<YourAccessToken>`   |
+
+---
+
+### 🧾 Sample Request Body
 
 ```json
 {
   "head": {
-    "key": "<YourAppKey>",
-    "appName": "<YourAppName>",
-    "osName": "<YourOS>",
-    "requestCode": "5POSV2",
-    "userId": "<YourUserID>",
-    "password": "<YourPassword>"
+    "key": "<YourAppKey>"
   },
   "body": {
+    "ClientCode": "<ClientCode>",
     "OrdStatusReqList": [
       {
         "Exch": "N",
-        "ExchType": "C",
-        "ScripCode": 500112,
-        "RemoteOrderID": "string",
-        "ClientCode": "string"
+        "RemoteOrderID": "0327020205139304480"
+      },
+      {
+        "Exch": "N",
+        "RemoteOrderID": "203051105331"
       }
     ]
   }
 }
-```
-
-| Field           | Type    | Description                                             |
-| --------------- | ------- | ------------------------------------------------------- |
-| `Exch`          | string  | Exchange code (e.g., "N" for NSE, "B" for BSE)          |
-| `ExchType`      | string  | Exchange type (e.g., "C" for Cash, "D" for Derivatives) |
-| `ScripCode`     | integer | Numeric code of the stock or derivative                 |
-| `RemoteOrderID` | string  | Optional remote order ID to track orders                |
-| `ClientCode`    | string  | Client identifier for the request                       |
+````
 
 ---
 
-## 📤 Response Structure (JSON)
+## 📤 Success Response Example
 
 ```json
 {
-  "head": {
-    "responseCode": "5POSV2",
-    "status": 0,
-    "statusDescription": "Success"
-  },
   "body": {
-    "OrderStatusResList": [
+    "Message": "Success",
+    "OrdStatusResLst": [
       {
-        "BrokerOrderID": 123456,
-        "ExchOrderID": 987654321,
+        "AveragePrice": 431.05,
         "Exch": "N",
+        "ExchOrderID": 10000365323,
+        "ExchOrderTime": "/Date(1715587966000+0530)/",
         "ExchType": "C",
-        "ScripCode": 500112,
-        "BuySell": "B",
-        "Qty": 100,
-        "TradedQty": 100,
+        "OrderQty": 1,
+        "OrderRate": 431.05,
+        "PendingQty": 1,
+        "ScripCode": 1660,
+        "Status": "Modified",
+        "Symbol": "ITC",
+        "TradedQty": 0
+      },
+      {
+        "AveragePrice": 431.05,
+        "Exch": "N",
+        "ExchOrderID": 100000365383,
+        "ExchOrderTime": "/Date(1715587966000+0530)/",
+        "ExchType": "C",
+        "OrderQty": 1,
+        "OrderRate": 431.05,
         "PendingQty": 0,
-        "Rate": 202.75,
-        "OrderStatus": "Fully Executed",
-        "OrderEntryTime": "2025-05-19T09:25:30",
-        "OrderModifyTime": "2025-05-19T09:30:15",
-        "OrderValidity": "DAY",
-        "TradedPrice": 202.75,
-        "RejectedReason": "",
-        "IsSLTriggered": false,
-        "SLTriggerRate": 0.00
+        "ScripCode": 1660,
+        "Status": "Fully Executed",
+        "Symbol": "ITC",
+        "TradedQty": 1
       }
-    ]
+    ],
+    "Status": 0
+  },
+  "head": {
+    "responseCode": "5POrdStatusV2",
+    "status": "0",
+    "statusDescription": "Success"
   }
 }
 ```
 
-| Field             | Type     | Description                                   |
-| ----------------- | -------- | --------------------------------------------- |
-| `BrokerOrderID`   | int      | Broker-assigned order ID                      |
-| `ExchOrderID`     | long     | Exchange-assigned order ID                    |
-| `BuySell`         | string   | Direction of trade: "B" for Buy, "S" for Sell |
-| `Qty`             | int      | Total order quantity                          |
-| `TradedQty`       | int      | Quantity traded so far                        |
-| `PendingQty`      | int      | Remaining quantity yet to be traded           |
-| `Rate`            | float    | Order placement price                         |
-| `OrderStatus`     | string   | Status such as "Open", "Fully Executed", etc. |
-| `OrderEntryTime`  | datetime | Order placement time                          |
-| `OrderModifyTime` | datetime | Last modification time                        |
-| `OrderValidity`   | string   | Validity like "DAY", "IOC", etc.              |
-| `TradedPrice`     | float    | Average traded price                          |
-| `RejectedReason`  | string   | Rejection reason, if any                      |
-| `IsSLTriggered`   | boolean  | Indicates if Stop-Loss was triggered          |
-| `SLTriggerRate`   | float    | Trigger price for SL orders                   |
-
 ---
 
-## 🚦 Sample Success Response
+## ❌ Failure Response Example
 
 ```json
 {
-  "head": {
-    "responseCode": "5POSV2",
-    "status": 0,
-    "statusDescription": "Success"
-  },
   "body": {
-    "OrderStatusResList": [
-      {
-        "BrokerOrderID": 123456,
-        "ExchOrderID": 987654321,
-        "Exch": "N",
-        "ExchType": "C",
-        "ScripCode": 500112,
-        "BuySell": "B",
-        "Qty": 100,
-        "TradedQty": 100,
-        "PendingQty": 0,
-        "Rate": 202.75,
-        "OrderStatus": "Fully Executed",
-        "OrderEntryTime": "2025-05-19T09:25:30",
-        "OrderModifyTime": "2025-05-19T09:30:15",
-        "OrderValidity": "DAY",
-        "TradedPrice": 202.75,
-        "RejectedReason": "",
-        "IsSLTriggered": false,
-        "SLTriggerRate": 0.00
-      }
-    ]
+    "Message": "Success",
+    "OrdStatusResLst": [],
+    "Status": 0
+  },
+  "head": {
+    "responseCode": "5POrdStatusV2",
+    "status": "0",
+    "statusDescription": "Success"
   }
 }
 ```
 
 ---
 
+## 📘 Field Definitions
 
-## ✅ Best Practices
+### 🔸 Request Parameters
 
-* Use batching for multiple orders (max \~50 per request).
-* Use response codes and descriptions for robust error handling.
----
-## 🔁 Example Use Case
-
-This API is ideal for:
-
-* Checking current order status in dashboards
-* Tracking multiple orders in algo trading bots
-* Integrating into trading assistants using RAG-based workflows
+| Field           | Type   | Required | Description                               |
+| --------------- | ------ | -------- | ----------------------------------------- |
+| `Exch`          | string | Yes      | Exchange code (e.g. `"N"` for NSE)        |
+| `RemoteOrderID` | string | Yes      | Order ID generated at the time of placing |
+| `ClientCode`    | string | Yes      | User's client code                        |
 
 ---
 
-## 📎 Notes
+### 🔸 Response Fields
 
-* The API supports batch order status requests.
-* Ensure your token and session are valid before making requests.
-* Use exchange codes like `N`, `B`, etc. as per your broker's specifications.
+| Field           | Type     | Description                                   |
+| --------------- | -------- | --------------------------------------------- |
+| `AveragePrice`  | float    | Average traded price                          |
+| `Exch`          | string   | Exchange code                                 |
+| `ExchOrderID`   | string   | Order ID from exchange                        |
+| `ExchOrderTime` | datetime | Order entry timestamp                         |
+| `ExchType`      | string   | Exchange type (e.g., C = Cash, D = Deriv.)    |
+| `OrderQty`      | int      | Total quantity                                |
+| `OrderRate`     | float    | Price at which order was placed               |
+| `PendingQty`    | int      | Quantity yet to be traded                     |
+| `ScripCode`     | int      | Unique instrument code                        |
+| `Status`        | string   | Current status (e.g., "Modified", "Executed") |
+| `Symbol`        | string   | Trading symbol (e.g., "ITC")                  |
+| `TradedQty`     | int      | Quantity already traded                       |
+
+---
+
+## 📑 Order Status Values
+
+| Status             | Meaning                             |
+| ------------------ | ----------------------------------- |
+| `Fully Executed`   | Order completed                     |
+| `Modified`         | Order was modified                  |
+| `Xmitted`          | Not reached or rejected by exchange |
+| `Rejected By 5P`   | Rejected by 5paisa system           |
+| `Rejected by Exch` | Rejected by exchange                |
+| `Cancelled`        | Order was cancelled                 |
+| `Pending`          | Order placed and awaiting execution |
+
+---
+
+## 🔁 Use Cases
+
+* Checking real-time order status in trading dashboards
+* Monitoring order lifecycle in algorithmic bots
+* Integrating into RAG-based AI assistants for trading automation
+
+---
+
+## ⚙️ Best Practices
+
+* Batch multiple order queries (up to \~50)
+* Validate session token before calling
+* Use proper exchange codes (`N`, `B`, `M`, `X`)
+
+---
+
+## 🔐 Authentication
+
+* Requires a valid bearer token in the `Authorization` header
+* App Key in the `head.key` field is mandatory
+* Session tokens must be refreshed periodically
+
+---
+
+## 📎 Additional Notes
+
+* Use this API instead of full Order Book API for specific order lookup
+* Exchange Order ID from this API can be used for modifying/cancelling orders
+* All timestamps returned are Unix/Epoch-style (can be converted)
+
+---
+
+## 🧪 Postman / cURL Example
+
+```bash
+curl --location 'https://Openapi.5paisa.com/VendorsAPI/Service1.svc/V2/OrderStatus' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <YourAccessToken>' \
+--data '{
+  "head": {
+    "key": "<YourAppKey>"
+  },
+  "body": {
+    "ClientCode": "<ClientCode>",
+    "OrdStatusReqList": [
+      {
+        "Exch": "N",
+        "RemoteOrderID": "0327020205139304480"
+      }
+    ]
+  }
+}'
+```
 
 ---
 
